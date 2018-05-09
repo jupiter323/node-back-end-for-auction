@@ -22,16 +22,16 @@ app.set('view engine', 'pug');
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 
 app.use(logger('dev'));
-app.use(require('express-bunyan-logger')({
-  name: 'Japonic',
-  streams: [{
-    type: 'rotating-file',
-    level: 'info',
-    path: __dirname + '/logs/Japonic_' + new Date().toISOString() + '.log',
-    period: '1w',   // weekly rotation
-    count: 3,        // keep 3 back copies
-  }]
-}));
+// app.use(require('express-bunyan-logger')({
+//   name: 'Japonic',
+//   streams: [{
+//     type: 'rotating-file',
+//     level: 'info',
+//     path: __dirname + '/logs/Japonic_' + new Date().toISOString() + '.log',
+//     period: '1w',   // weekly rotation
+//     count: 3,        // keep 3 back copies
+//   }]
+// }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
