@@ -5,7 +5,17 @@ var response = require('../helpers/response');
 
 // Initialization Options
 var options = {
-  promiseLib: promise
+  promiseLib: promise,
+  error: (error, e) => {
+    if (e.cn) {
+      // A connection-related error;
+      //
+      // Connections are reported back with the password hashed,
+      // for safe errors logging, without exposing passwords.
+      console.log('CN: ', e.cn);
+      console.log('EVENT', error.message ||  error);
+    }
+  }
 };
 
 var pgp = require('pg-promise')(options);
@@ -27,8 +37,8 @@ router.get('/', (req, res) => {
     })
     .catch(function (err) {
       return res
-                .status(404)
-                .json(response.result({}, 0, err));
+        .status(404)
+        .json(response.result({}, 0, err));
     });
   // res.json({ sessionID: 'req.sessionID', session: 'req.session' });
 });
@@ -48,8 +58,8 @@ router.get('/companies', (req, res) => {
     })
     .catch(function (err) {
       return res
-                .status(404)
-                .json(response.result({}, 0, err));
+        .status(404)
+        .json(response.result({}, 0, err));
     });
 });
 
@@ -72,7 +82,7 @@ router.get('/models', (req, res) => {
   if (makerId) {
     queryStr = queryStr + " INNER JOIN auctions$model_maker t2 on t2.auctions$modelid = t1.id  WHERE t2.auctions$makerid = $/makerId/ ";
     queryDict['makerId'] = makerId;
-  } 
+  }
 
   queryStr = queryStr + " ORDER BY id LIMIT $/limit/ OFFSET $/pageNum/ ";
   const query = pgp.as.format(queryStr, queryDict);
@@ -84,8 +94,8 @@ router.get('/models', (req, res) => {
     })
     .catch(function (err) {
       return res
-                .status(404)
-                .json(response.result({}, 0, err));
+        .status(404)
+        .json(response.result({}, 0, err));
     });
 });
 
@@ -114,19 +124,19 @@ router.get('/lots', (req, res) => {
   if (companyName) {
     queryStr = queryStr + " company_en = $/companyName/ ";
     queryDict['companyName'] = companyName;
-  }else {
+  } else {
     return res
-              .status(404)
-              .json(response.result({}, 0, 'company name is required'));
+      .status(404)
+      .json(response.result({}, 0, 'company name is required'));
   }
 
   if (modelName) {
     queryStr = queryStr + " AND model_name_en = $/modelName/ ";
     queryDict['modelName'] = modelName;
-  }else {
+  } else {
     return res
-              .status(404)
-              .json(response.result({}, 0, 'model name is required'));
+      .status(404)
+      .json(response.result({}, 0, 'model name is required'));
   }
 
   if (modelYearFrom) {
@@ -140,15 +150,15 @@ router.get('/lots', (req, res) => {
   }
 
   if (lotDate) {
-    const nextDate = 
-    queryStr = queryStr + " AND createddate >= $/lotDate/ AND createddate < (DATE $/lotDate/ + INTEGER '1') ";
+    const nextDate =
+      queryStr = queryStr + " AND createddate >= $/lotDate/ AND createddate < (DATE $/lotDate/ + INTEGER '1') ";
     queryDict['lotDate'] = lotDate;
   }
 
   queryStr = queryStr + " ORDER BY id LIMIT $/limit/ OFFSET $/pageNum/ ";
   const query = pgp.as.format(queryStr, queryDict);
   console.log(query);
-//date '2001-09-28' + integer '7'
+  //date '2001-09-28' + integer '7'
 
   db.any(query)
     .then(function (data) {
@@ -156,8 +166,8 @@ router.get('/lots', (req, res) => {
     })
     .catch(function (err) {
       return res
-                .status(404)
-                .json(response.result({}, 0, err));
+        .status(404)
+        .json(response.result({}, 0, err));
     });
 });
 
