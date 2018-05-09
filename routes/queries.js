@@ -45,15 +45,8 @@ router.get('/', (req, res) => {
 });
 
 router.get('/companies', (req, res) => {
-  var limit = parseInt(req.query.limit);
-  var pageNum = parseInt(req.query.page_number);
-  if (!limit) {
-    limit = 20;
-  }
-  if (!pageNum) {
-    pageNum = 1;
-  }
-  db.any('SELECT name FROM auctions$maker ORDER BY id LIMIT $1 OFFSET $2', [limit, pageNum])
+  
+  db.any('SELECT name FROM auctions$maker ORDER BY id ')
     .then(function (data) {
       res.json(response.result(data, 1, "successfully retrieved companies"));
     })
@@ -65,22 +58,12 @@ router.get('/companies', (req, res) => {
 });
 
 router.get('/models', (req, res) => {
-  var limit = parseInt(req.query.limit);
-  var pageNum = parseInt(req.query.page_number);
-  console.log(pageNum);
   var makerName = req.query.company_name;
-  if (!limit) {
-    limit = 20;
-  }
-  if (!pageNum) {
-    pageNum = 1;
-  }
+  
   // SELECT T4.* FROM (SELECT * FROM auctions$maker T1 LEFT JOIN auctions$model_maker T2 ON T1.id = T2.auctions$makerid WHERE T1.name='NISSAN'  ) AS T3 LEFT JOIN auctions$model T4 ON T4.ID=T3.auctions$modelid ;
-  var queryStr = "SELECT T4.name FROM (SELECT * FROM auctions$maker T1 LEFT JOIN auctions$model_maker T2 ON T1.id = T2.auctions$makerid WHERE T1.name=$/makerName/ ) AS T3 LEFT JOIN auctions$model T4 ON T4.ID=T3.auctions$modelid  ORDER BY T4.id LIMIT $/limit/ OFFSET $/pageNum/  ";
+  var queryStr = "SELECT T4.name FROM (SELECT * FROM auctions$maker T1 LEFT JOIN auctions$model_maker T2 ON T1.id = T2.auctions$makerid WHERE T1.name=$/makerName/ ) AS T3 LEFT JOIN auctions$model T4 ON T4.ID=T3.auctions$modelid  ORDER BY T4.id ";
   var queryDict = {
-    limit: limit,
-    pageNum: pageNum
-  }
+  };
   if (makerName) {
     queryDict['makerName'] = makerName;
   }else {
