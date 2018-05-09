@@ -12,7 +12,25 @@ var pgp = require('pg-promise')(options);
 var connectionString = 'postgres://postgres:123456@127.0.0.1:5432/japonic'; //'postgres://username:password@servername:port/databaseName';
 var db = pgp(connectionString);
 router.get('/', (req, res) => {
-  res.json({ sessionID: 'req.sessionID', session: 'req.session' });
+  console.log('db =>', db);
+  const limit = parseInt(req.query.limit);
+  const pageNum = parseInt(req.query.page_number);
+  if (!limit) {
+    limit = 20;
+  }
+  if (!pageNum) {
+    pageNum = 1;
+  }
+  db.any('SELECT * FROM auctions$maker ORDER BY id LIMIT $1 OFFSET $2', [limit, pageNum])
+    .then(function (data) {
+      res.json(response.result(data, 1, "successfully retrieved companies"));
+    })
+    .catch(function (err) {
+      return res
+                .status(404)
+                .json(response.result({}, 0, err));
+    });
+  // res.json({ sessionID: 'req.sessionID', session: 'req.session' });
 });
 
 router.get('/companies', (req, res) => {
