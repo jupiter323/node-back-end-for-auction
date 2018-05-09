@@ -19,12 +19,13 @@ var options = {
 };
 
 var pgp = require('pg-promise')(options);
-var connectionString = 'postgres://postgres:123456@127.0.0.1:5432/japonic'; //'postgres://username:password@servername:port/databaseName';
+// var connectionString = 'postgres://postgres:123456@127.0.0.1:5432/japonic'; //'postgres://username:password@servername:port/databaseName';
+var connectionString = 'postgres://postgres:Welkom01@34.253.34.86:5432/Japonic3'; //'postgres://username:password@servername:port/databaseName';
 var db = pgp(connectionString);
 router.get('/', (req, res) => {
   console.log('db =>', db);
-  const limit = parseInt(req.query.limit);
-  const pageNum = parseInt(req.query.page_number);
+  var limit = parseInt(req.query.limit);
+  var pageNum = parseInt(req.query.page_number);
   if (!limit) {
     limit = 20;
   }
@@ -44,15 +45,15 @@ router.get('/', (req, res) => {
 });
 
 router.get('/companies', (req, res) => {
-  const limit = parseInt(req.query.limit);
-  const pageNum = parseInt(req.query.page_number);
+  var limit = parseInt(req.query.limit);
+  var pageNum = parseInt(req.query.page_number);
   if (!limit) {
     limit = 20;
   }
   if (!pageNum) {
     pageNum = 1;
   }
-  db.any('SELECT * FROM auctions$maker ORDER BY id LIMIT $1 OFFSET $2', [limit, pageNum])
+  db.any('SELECT name FROM auctions$maker ORDER BY id LIMIT $1 OFFSET $2', [limit, pageNum])
     .then(function (data) {
       res.json(response.result(data, 1, "successfully retrieved companies"));
     })
@@ -64,28 +65,32 @@ router.get('/companies', (req, res) => {
 });
 
 router.get('/models', (req, res) => {
-  const limit = parseInt(req.query.limit);
-  const pageNum = parseInt(req.query.page_number);
+  var limit = parseInt(req.query.limit);
+  var pageNum = parseInt(req.query.page_number);
   console.log(pageNum);
-  const makerId = req.query.company_id;
+  var makerName = req.query.company_name;
   if (!limit) {
     limit = 20;
   }
   if (!pageNum) {
     pageNum = 1;
   }
-  var queryStr = "SELECT t1.* FROM auctions$model t1  ";
+  // SELECT T4.* FROM (SELECT * FROM auctions$maker T1 LEFT JOIN auctions$model_maker T2 ON T1.id = T2.auctions$makerid WHERE T1.name='NISSAN'  ) AS T3 LEFT JOIN auctions$model T4 ON T4.ID=T3.auctions$modelid ;
+  var queryStr = "SELECT T4.name FROM (SELECT * FROM auctions$maker T1 LEFT JOIN auctions$model_maker T2 ON T1.id = T2.auctions$makerid WHERE T1.name=$/makerName/ ) AS T3 LEFT JOIN auctions$model T4 ON T4.ID=T3.auctions$modelid  ORDER BY T4.id LIMIT $/limit/ OFFSET $/pageNum/  ";
   var queryDict = {
     limit: limit,
     pageNum: pageNum
   }
-  if (makerId) {
-    queryStr = queryStr + " INNER JOIN auctions$model_maker t2 on t2.auctions$modelid = t1.id  WHERE t2.auctions$makerid = $/makerId/ ";
-    queryDict['makerId'] = makerId;
+  if (makerName) {
+    queryDict['makerName'] = makerName;
+  }else {
+    return res
+      .status(404)
+      .json(response.result({}, 0, 'company name is required'));
   }
 
-  queryStr = queryStr + " ORDER BY id LIMIT $/limit/ OFFSET $/pageNum/ ";
-  const query = pgp.as.format(queryStr, queryDict);
+  queryStr = queryStr + "";
+  var query = pgp.as.format(queryStr, queryDict);
   console.log(query);
 
   db.any(query)
@@ -100,13 +105,13 @@ router.get('/models', (req, res) => {
 });
 
 router.get('/lots', (req, res) => {
-  const limit = parseInt(req.query.limit);
-  const pageNum = parseInt(req.query.page_number);
-  const companyName = req.query.company_name_en;
-  const modelName = req.query.model_name_en;
-  const modelYearFrom = req.query.model_year_en_from;
-  const modelYearTo = req.query.model_year_en_to;
-  const lotDate = req.query.lot_date;
+  var limit = parseInt(req.query.limit);
+  var pageNum = parseInt(req.query.page_number);
+  var companyName = req.query.company_name_en;
+  var modelName = req.query.model_name_en;
+  var modelYearFrom = req.query.model_year_en_from;
+  var modelYearTo = req.query.model_year_en_to;
+  var lotDate = req.query.lot_date;
 
   if (!limit) {
     limit = 20;
@@ -150,13 +155,13 @@ router.get('/lots', (req, res) => {
   }
 
   if (lotDate) {
-    const nextDate =
-      queryStr = queryStr + " AND createddate >= $/lotDate/ AND createddate < (DATE $/lotDate/ + INTEGER '1') ";
+    var nextDate =
+      queryStr = queryStr + " AND date >= $/lotDate/ AND date < (DATE $/lotDate/ + INTEGER '1') ";
     queryDict['lotDate'] = lotDate;
   }
 
   queryStr = queryStr + " ORDER BY id LIMIT $/limit/ OFFSET $/pageNum/ ";
-  const query = pgp.as.format(queryStr, queryDict);
+  var query = pgp.as.format(queryStr, queryDict);
   console.log(query);
   //date '2001-09-28' + integer '7'
 
