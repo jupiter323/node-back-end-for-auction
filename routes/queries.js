@@ -9,7 +9,7 @@ var options = {
 };
 
 var pgp = require('pg-promise')(options);
-var connectionString = 'postgres://postgres@localhost:5432/japonic'; //'postgres://username@servername:port/databaseName';
+var connectionString = 'postgres:123456//postgres@localhost:5432/japonic'; //'postgres://username@servername:port/databaseName';
 var db = pgp(connectionString);
 router.get('/', (req, res) => {
   res.json({ sessionID: 'req.sessionID', session: 'req.session' });
