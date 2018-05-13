@@ -19,8 +19,8 @@ var options = {
 };
 
 var pgp = require('pg-promise')(options);
-// var connectionString = 'postgres://postgres:123456@127.0.0.1:5432/japonic'; //'postgres://username:password@servername:port/databaseName';
-var connectionString = 'postgres://postgres:Welkom01@34.253.34.86:5432/Japonic3'; //'postgres://username:password@servername:port/databaseName';
+var connectionString = 'postgres://postgres:123456@127.0.0.1:5432/japonic'; //'postgres://username:password@servername:port/databaseName';
+// var connectionString = 'postgres://postgres:Welkom01@34.253.34.86:5432/Japonic3'; //'postgres://username:password@servername:port/databaseName';
 var db = pgp(connectionString);
 router.get('/', (req, res) => {
   console.log('db =>', db);
