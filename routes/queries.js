@@ -23,30 +23,12 @@ var connectionString = 'postgres://postgres:123456@127.0.0.1:5432/japonic'; //'p
 // var connectionString = 'postgres://postgres:Welkom01@34.253.34.86:5432/Japonic3'; //'postgres://username:password@servername:port/databaseName';
 var db = pgp(connectionString);
 router.get('/', (req, res) => {
-  console.log('db =>', db);
-  var limit = parseInt(req.query.limit);
-  var pageNum = parseInt(req.query.page_number);
-  if (!limit) {
-    limit = 20;
-  }
-  if (!pageNum) {
-    pageNum = 1;
-  }
-  db.any('SELECT * FROM auctions$maker ORDER BY id LIMIT $1 OFFSET $2', [limit, pageNum])
-    .then(function (data) {
-      res.json(response.result(data, 1, "successfully retrieved companies"));
-    })
-    .catch(function (err) {
-      return res
-        .status(404)
-        .json(response.result({}, 0, err));
-    });
-  // res.json({ sessionID: 'req.sessionID', session: 'req.session' });
+  res.json({ sessionID: 'req.sessionID', session: 'req.session' });
 });
 
 router.get('/companies', (req, res) => {
   
-  db.any('SELECT name FROM auctions$maker ORDER BY id ')
+  db.any('SELECT t1.name FROM auctions$maker as t1 INNER JOIN auctions$lot as t2 ON t1.name=t2.company_en GROUP BY t1.id ORDER BY t1.name ASC')
     .then(function (data) {
       res.json(response.result(data, 1, "successfully retrieved companies"));
     })
@@ -61,7 +43,7 @@ router.get('/models', (req, res) => {
   var makerName = req.query.company_name;
   
   // SELECT T4.* FROM (SELECT * FROM auctions$maker T1 LEFT JOIN auctions$model_maker T2 ON T1.id = T2.auctions$makerid WHERE T1.name='NISSAN'  ) AS T3 LEFT JOIN auctions$model T4 ON T4.ID=T3.auctions$modelid ;
-  var queryStr = "SELECT T4.name FROM (SELECT * FROM auctions$maker T1 LEFT JOIN auctions$model_maker T2 ON T1.id = T2.auctions$makerid WHERE T1.name=$/makerName/ ) AS T3 LEFT JOIN auctions$model T4 ON T4.ID=T3.auctions$modelid  ORDER BY T4.id ";
+  var queryStr = "SELECT T4.name FROM (SELECT * FROM auctions$maker T1 LEFT JOIN auctions$model_maker T2 ON T1.id = T2.auctions$makerid WHERE T1.name=$/makerName/ ) AS T3 LEFT JOIN auctions$model T4 ON T4.ID=T3.auctions$modelid INNER JOIN auctions$lot  T5 ON T5.model_name_en=T4.name GROUP BY T4.id ORDER BY T4.name ASC ";
   var queryDict = {
   };
   if (makerName) {
@@ -143,7 +125,7 @@ router.get('/lots', (req, res) => {
     queryDict['lotDate'] = lotDate;
   }
 
-  queryStr = queryStr + " ORDER BY id LIMIT $/limit/ OFFSET $/pageNum/ ";
+  queryStr = queryStr + " ORDER BY model_year_en DESC LIMIT $/limit/ OFFSET $/pageNum/ ";
   var query = pgp.as.format(queryStr, queryDict);
   console.log(query);
   //date '2001-09-28' + integer '7'
