@@ -103,11 +103,7 @@ router.get('/lots', (req, res) => {
   if (modelName) {
     queryStr = queryStr + " AND model_name_en = $/modelName/ ";
     queryDict['modelName'] = modelName;
-  } else {
-    return res
-      .status(404)
-      .json(response.result({}, 0, 'model name is required'));
-  }
+  } 
 
   if (modelYearFrom) {
     queryStr = queryStr + " AND model_year_en >= $/modelYearFrom/ ";
