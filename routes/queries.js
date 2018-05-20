@@ -19,7 +19,7 @@ var options = {
 };
 
 var pgp = require('pg-promise')(options);
-// var connectionString = 'postgres://postgres:123456@127.0.0.1:5432/japonic'; //'postgres://username:password@servername:port/databaseName';
+// var connectionString = 'postgres://postgres:123456@127.0.0.1:5432/japonic3'; //'postgres://username:password@servername:port/databaseName';
 var connectionString = 'postgres://postgres:Welkom01@34.243.192.210:5432/Japonic_DEV'; //'postgres://username:password@servername:port/databaseName';
 var db = pgp(connectionString);
 router.get('/', (req, res) => {
@@ -60,6 +60,7 @@ router.get('/models', (req, res) => {
 
   db.any(query)
     .then(function (data) {
+      console.log(data);
       res.json(response.result(data, 1, "successfully retrieved models"));
     })
     .catch(function (err) {
@@ -82,7 +83,7 @@ router.get('/lots', (req, res) => {
     limit = 20;
   }
   if (!pageNum) {
-    pageNum = 1;
+    pageNum = 0;
   }
 
   var queryStr = "SELECT * FROM auctions$lot WHERE ";
