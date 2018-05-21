@@ -89,7 +89,7 @@ router.get('/lots', (req, res) => {
   var queryStr = "SELECT * FROM auctions$lot WHERE ";
   var queryDict = {
     limit: limit,
-    pageNum: pageNum
+    pageNum: pageNum * limit
   }
 
   if (companyName) {
