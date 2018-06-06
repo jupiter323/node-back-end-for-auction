@@ -38,16 +38,16 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // setup the logger
 // app.use(morgan('combined', {stream: accessLogStream}))
-app.use(require('express-bunyan-logger')({
-  name: 'Japonic',
-  streams: [{
-    type: 'rotating-file',
-    level: 'info',
-    path: logDirectory + '/japonic.log',
-    period: '1w',   // weekly rotation
-    count: 3,        // keep 3 back copies
-  }]
-}));
+// app.use(require('express-bunyan-logger')({
+//   name: 'Japonic',
+//   streams: [{
+//     type: 'rotating-file',
+//     level: 'info',
+//     path: logDirectory + '/japonic.log',
+//     period: '1w',   // weekly rotation
+//     count: 3,        // keep 3 back copies
+//   }]
+// }));
 app.use('/', index);
 app.use('/users', users);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));

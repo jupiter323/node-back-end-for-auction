@@ -30,7 +30,7 @@ router.get('/', (req, res) => {
 
 router.get('/companies', (req, res) => {
   
-  db.any('SELECT t1.name FROM auctions$maker as t1 INNER JOIN auctions$lot as t2 ON t1.name=t2.company_en GROUP BY t1.id ORDER BY t1.name ASC')
+  db.any('SELECT t1.name FROM auctions$maker as t1 INNER JOIN auctions$lot as t2 ON t1.name=t2.company_en WHERE t2.result_num = 5  GROUP BY t1.id ORDER BY t1.name ASC')
     .then(function (data) {
       res.json(response.result(data, 1, "successfully retrieved companies"));
     })
@@ -45,7 +45,7 @@ router.get('/models', (req, res) => {
   var makerName = req.query.company_name;
   
   // SELECT T4.* FROM (SELECT * FROM auctions$maker T1 LEFT JOIN auctions$model_maker T2 ON T1.id = T2.auctions$makerid WHERE T1.name='NISSAN'  ) AS T3 LEFT JOIN auctions$model T4 ON T4.ID=T3.auctions$modelid ;
-  var queryStr = "SELECT T4.name FROM (SELECT * FROM auctions$maker T1 LEFT JOIN auctions$model_maker T2 ON T1.id = T2.auctions$makerid WHERE T1.name=$/makerName/ ) AS T3 LEFT JOIN auctions$model T4 ON T4.ID=T3.auctions$modelid INNER JOIN auctions$lot  T5 ON T5.model_name_en=T4.name AND T5.company_en=T3.name GROUP BY T4.id ORDER BY T4.name ASC ";
+  var queryStr = "SELECT T4.name FROM (SELECT * FROM auctions$maker T1 LEFT JOIN auctions$model_maker T2 ON T1.id = T2.auctions$makerid WHERE T1.name=$/makerName/ ) AS T3 LEFT JOIN auctions$model T4 ON T4.ID=T3.auctions$modelid INNER JOIN auctions$lot  T5 ON T5.model_name_en=T4.name AND T5.company_en=T3.name AND T5.result_num = 5 GROUP BY T4.id ORDER BY T4.name ASC ";
   var queryDict = {
   };
   if (makerName) {
@@ -88,6 +88,7 @@ router.get('/lots', (req, res) => {
     pageNum = 0;
   }
 
+  // var queryStr = "SELECT * FROM auctions$lot WHERE result_num = 5 ";
   var queryStr = "SELECT * FROM auctions$lot WHERE ";
   var queryDict = {
     limit: limit,
