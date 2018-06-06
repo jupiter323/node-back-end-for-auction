@@ -2,8 +2,9 @@ var express = require('express');
 var router = express.Router();
 
 var queries = require('./queries');
-
-router.use('/api', queries);
+var external = require('./external');
+router.use('/query', queries);
+router.use('/api', external);
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
