@@ -30,7 +30,7 @@ function convertedResult(data) {
         equipment_en: data.EQUIP ? data.EQUIP : '',
         transmission_en: data.KPP ? data.KPP : '',
         start_price_en: data.START ? data.START : '',
-        mileage_en: '',
+        mileage_en: data.MILEAGE ? data.MILEAGE : '',
         _id: 0,
         end_price_usd: 0,
         end_price_num: data.FINISH ? parseInt(data.FINISH) : 0,
