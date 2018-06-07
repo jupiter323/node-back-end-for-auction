@@ -9,6 +9,19 @@ var index = require('./routes/index');
 var users = require('./routes/users');
 
 var app = express();
+var fs = require('fs');
+var morgan = require('morgan');
+var rfs = require('rotating-file-stream');
+var logDirectory = path.join(__dirname, 'log');
+
+// ensure log directory exists
+fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory)
+
+// create a rotating write stream
+// var accessLogStream = rfs('japonic.log', {
+//   interval: '1w', // rotate daily
+//   path: logDirectory
+// });
 
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger.json');
@@ -17,26 +30,24 @@ const swaggerDocument = require('./swagger.json');
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
-
-// uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-
 app.use(logger('dev'));
-// app.use(require('express-bunyan-logger')({
-//   name: 'Japonic',
-//   streams: [{
-//     type: 'rotating-file',
-//     level: 'info',
-//     path: __dirname + '/logs/Japonic_' + new Date().toISOString() + '.log',
-//     period: '1w',   // weekly rotation
-//     count: 3,        // keep 3 back copies
-//   }]
-// }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// setup the logger
+// app.use(morgan('combined', {stream: accessLogStream}))
+// app.use(require('express-bunyan-logger')({
+//   name: 'Japonic',
+//   streams: [{
+//     type: 'rotating-file',
+//     level: 'info',
+//     path: logDirectory + '/japonic.log',
+//     period: '1w',   // weekly rotation
+//     count: 3,        // keep 3 back copies
+//   }]
+// }));
 app.use('/', index);
 app.use('/users', users);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
