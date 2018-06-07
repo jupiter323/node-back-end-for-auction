@@ -1,3 +1,4 @@
+var dateFormatter = require('dateformat');
 exports.result = result;
 function result(data, success, message) {
     var result = {};
@@ -7,20 +8,25 @@ function result(data, success, message) {
     return result;
 }
 
+function convertDateFormat(date) {
+    const formatter = "yyyy-mm-dd'T'HH:MM:ss";
+    return dateFormatter(date, formatter);
+}
 exports.convertedResult = convertedResult;
 function convertedResult(data) {
+
     var result = {
         id: data.ID,
-        date: data.AUCTION_DATE ? data.AUCTION_DATE : '',
+        date: data.AUCTION_DATE ? convertDateFormat(data.AUCTION_DATE) : '',
         result_en: data.STATUS ? data.STATUS : '',
         color_en: data.COLOR ? data.COLOR : '',
         auct_system_ref: '',
         special_num: '',
-        inspection_en: data.INFO ? data.INFO : '',
+        inspection_en: data.INFO ? convertDateFormat(data.INFO) : '',
         end_price_en: data.FINISH ? parseInt(data.FINISH) : 0,
         result_num: 0,
-        model_type_en: data.GRADE ? data.GRADE : '',
-        datetime: data.AUCTION_DATE ? data.AUCTION_DATE : '',
+        model_type_en: data.KUZOV ? data.KUZOV : '',
+        datetime: data.AUCTION_DATE ? convertDateFormat(data.AUCTION_DATE) : '',
         is_special: 0,
         model_year_en: data.YEAR ? parseInt(data.YEAR) : 0,
         auction_name: data.AUCTION ? data.AUCTION : '',
@@ -64,7 +70,15 @@ function convertedResult(data) {
         var imageArray = imageStr.split('#');
         if (imageArray && imageArray.length > 0) {
             for (var i = 0; i < imageArray.length; i++) {
-                result[`pic${i + 2}`] = imageArray[i];
+                var image = imageArray[i];
+                if (image) {
+                    console.log(image);
+                    if (image.includes('&h=50')) {
+                        image = image.slice(0, -5);
+                        console.log(image);
+                    }
+                    result[`pic${i + 2}`] = image;
+                }                
             }
         } else {
             result['pic2'] = data.IMAGES;
