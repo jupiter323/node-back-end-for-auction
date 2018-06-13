@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { AppComponent } from './app.component';
 import { HomeComponent } from './modules/homeModule/homeComponent/home.component';
+import { ShareModule } from './share/share.module';
 
 const appRoutes = [
   {
@@ -23,7 +24,8 @@ const appRoutes = [
   ],
   imports: [
     BrowserModule,
-    RouterModule.forRoot(appRoutes)
+    RouterModule.forRoot(appRoutes),
+    ShareModule
   ],
   providers: [],
   bootstrap: [AppComponent]
