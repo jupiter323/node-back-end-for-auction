@@ -17,6 +17,7 @@ npm-debug.log*
 coverage/
 dist/
 node_modules/
+public/front
 public/uploads/
 tmp/
 temp/
