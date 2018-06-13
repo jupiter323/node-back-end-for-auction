@@ -1,11 +1,12 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { HomeComponent } from './modules/homeModule/homeComponent/home.component';
 import { ShareModule } from './share/share.module';
-import {HomeheaderComponent} from './share/components/homeheader/homeheader.component';
+
 const appRoutes = [
   {
     path: 'home',
@@ -20,15 +21,16 @@ const appRoutes = [
   declarations: [
     AppComponent,
     HomeComponent,
-    HomeheaderComponent
-   
+    
+
   ],
   imports: [
     BrowserModule,
     RouterModule.forRoot(appRoutes),
-    ShareModule
+    ShareModule,
+    HttpClientModule
   ],
-  exports:[ShareModule],
+  exports: [ShareModule],
 
   providers: [],
   bootstrap: [AppComponent]

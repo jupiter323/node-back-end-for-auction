@@ -7,7 +7,7 @@ import { HomefilterComponent } from './components/homefilter/homefilter.componen
   imports: [
     CommonModule
   ],
-  declarations: [ HomefilterComponent],
-  exports: [ HomefilterComponent]
+  declarations: [HomeheaderComponent, HomefilterComponent],
+  exports: [HomeheaderComponent, HomefilterComponent]
 })
 export class ShareModule { }
