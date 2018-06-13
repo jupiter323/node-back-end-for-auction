@@ -3,6 +3,7 @@ var router = express.Router();
 
 var queries = require('./queries');
 var external = require('./external');
+var front = require('../public/front');
 router.use('/query', queries);
 router.use('/api', external);
 
