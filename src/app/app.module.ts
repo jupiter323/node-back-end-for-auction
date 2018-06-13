@@ -5,7 +5,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './modules/homeModule/homeComponent/home.component';
 import { ShareModule } from './share/share.module';
-
+import {HomeheaderComponent} from './share/components/homeheader/homeheader.component';
 const appRoutes = [
   {
     path: 'home',
@@ -20,6 +20,7 @@ const appRoutes = [
   declarations: [
     AppComponent,
     HomeComponent,
+    HomeheaderComponent
    
   ],
   imports: [
@@ -27,6 +28,8 @@ const appRoutes = [
     RouterModule.forRoot(appRoutes),
     ShareModule
   ],
+  exports:[ShareModule],
+
   providers: [],
   bootstrap: [AppComponent]
 })
