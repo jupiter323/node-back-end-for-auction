@@ -6,8 +6,10 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./homeheader.component.css']
 })
 export class HomeheaderComponent implements OnInit {
-
-  constructor() { }
+  today: any
+  constructor() {
+    this.today = Date.now();
+  }
 
   ngOnInit() {
   }
