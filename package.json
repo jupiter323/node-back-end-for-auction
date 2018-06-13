@@ -10,7 +10,7 @@
     "start": "ng build && node ./bin/www",
     "build": "ng build"
   },
-  "private": true,
+ 
   "dependencies": {
     "@angular/animations": "^6.0.3",
     "@angular/common": "^6.0.3",
