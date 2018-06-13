@@ -5,8 +5,9 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-var index = require('./routes/index');
 var users = require('./routes/users');
+var external = require('./routes/external');
+var queries = require('./routes/queries');
 
 var app = express();
 var fs = require('fs');
@@ -34,9 +35,8 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.static(path.join(__dirname, 'dist')));
-// app.use('/', express.static(path.join(__dirname, 'dist')));
+app.use(express.static(path.join(__dirname, 'dist/auction')));
+
 
 // setup the logger
 // app.use(morgan('combined', {stream: accessLogStream}))
@@ -50,10 +50,14 @@ app.use(express.static(path.join(__dirname, 'dist')));
 //     count: 3,        // keep 3 back copies
 //   }]
 // }));
-app.use('/', index);
+app.use('/api', external);
+app.use('/query', queries);
 app.use('/users', users);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.get('*', (req, res, next) => {
+  res.sendFile(path.join(__dirname, 'dist/auction/index.html'));
 
+})
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   var err = new Error('Not Found');
