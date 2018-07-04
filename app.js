@@ -17,11 +17,7 @@ var logDirectory = path.join(__dirname, 'log');
 // ensure log directory exists
 fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory)
 
-// create a rotating write stream
-// var accessLogStream = rfs('japonic.log', {
-//   interval: '1w', // rotate daily
-//   path: logDirectory
-// });
+
 
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger.json');
@@ -36,18 +32,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// setup the logger
-// app.use(morgan('combined', {stream: accessLogStream}))
-// app.use(require('express-bunyan-logger')({
-//   name: 'Japonic',
-//   streams: [{
-//     type: 'rotating-file',
-//     level: 'info',
-//     path: logDirectory + '/japonic.log',
-//     period: '1w',   // weekly rotation
-//     count: 3,        // keep 3 back copies
-//   }]
-// }));
+
 app.use('/', index);
 app.use('/users', users);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
